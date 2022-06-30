@@ -1,53 +1,57 @@
 import os
 import shutil
 
-FOLDERPATH = "C:\\Users\\lukol\\OneDrive\\Pulpit\\webdev"
-DESTINATIONDIR = "C:\\Users\\lukol\\OneDrive\\Pulpit\\webdev"
+ORIGIN_PATH = ""
+DESTINATION_PATH = ""
 
 unpackFolders = False
 
+
 def fileSorting(Path):
-    dirs = os.scandir(Path)
+    directories = os.scandir(Path)
 
-    for directory in dirs:
+    for directory in directories:
         if directory.is_file():
-            dirName = directory.name.split(".")
-            if (len(dirName) > 1):
-                destPath = DESTINATIONDIR + "\\" + dirName[-1].lower()
-                newName = dirName[0] + "(" + Path.split("\\")[-1] + ")." + dirName[-1].lower()
 
-                if dirName[-1].lower() not in os.listdir(DESTINATIONDIR):
-                    os.mkdir(destPath)
+            dir_name = directory.name.split(".")
 
-                os.rename(Path + "\\" + directory.name, Path + "\\" + newName)
+            if (len(dir_name) > 1):
+                dest_path = DESTINATION_PATH + "\\" + dir_name[-1].lower()
+                new_name = dir_name[-2] + "(" + Path.split("\\")[-1] + ")." + dir_name[-1].lower()
+
+                if dir_name[-1].lower() not in os.listdir(DESTINATION_PATH):
+                    os.mkdir(dest_path)
+
+                os.rename(Path + "\\" + directory.name, Path + "\\" + new_name)
+                
                 try:
-                    shutil.move(Path + "\\" + newName, destPath)
+                    shutil.move(Path + "\\" + new_name, dest_path)
                 except os.error:
                     print("Dupa")
                     pass
 
             else:
-                destPath = DESTINATIONDIR
+                dest_path = DESTINATION_PATH
                 try:
-                    shutil.move(Path + "\\" + directory.name, destPath)
+                    shutil.move(Path + "\\" + directory.name, dest_path)
                 except os.error:
                     print("Dupa")
                     pass
 
         else:
-            newName = directory.name + "(" + Path.split("\\")[-1] + ")"
-            os.rename(Path + "\\" + directory.name, Path + "\\" + newName)
+            new_name = directory.name + "(" + Path.split("\\")[-1] + ")"
+            os.rename(Path + "\\" + directory.name, Path + "\\" + new_name)
 
             if unpackFolders:
-                fileSorting(Path + "\\" + newName)
+                fileSorting(Path + "\\" + new_name)
             else:
-                destPath = DESTINATIONDIR + "\\"
+                dest_path = DESTINATION_PATH + "\\"
 
                 try:
-                    shutil.move(Path + "\\" + newName, destPath)
+                    shutil.move(Path + "\\" + new_name, dest_path)
                 except os.error:
                     print("Dupa")
                     pass
 
-fileSorting(FOLDERPATH)
+fileSorting(ORIGIN_PATH)
 
